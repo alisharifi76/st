@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Library.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">All in sharifi Coverage Results</a> &gt; <a href="index.source.html" class="el_package">ir.ramtung.impl2</a> &gt; <span class="el_source">Library.java</span></div><h1>Library.java</h1><pre class="source lang-java linenums">package ir.ramtung.impl2;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ir.ramtung.sts01.ILibrary;
+import ir.ramtung.sts01.LibraryException;
+
+abstract class Document {
+<span class="nc" id="L10">    public Document(String docTitle, int docCopies) {</span>
+<span class="nc" id="L11">        title = docTitle;</span>
+<span class="nc" id="L12">        copies = docCopies;</span>
+<span class="nc" id="L13">    }</span>
+
+    public String getTitle() {
+<span class="nc" id="L16">        return title;</span>
+    }
+
+    public int getCopies() {
+<span class="nc" id="L20">        return copies;</span>
+    }
+
+    public int getDay() {
+<span class="nc" id="L24">        return day;</span>
+    }
+
+    public void barrowBook() {
+<span class="nc" id="L28">        copies--;</span>
+<span class="nc" id="L29">    }</span>
+
+    public void returnBook() {
+<span class="nc" id="L32">        copies++;</span>
+<span class="nc" id="L33">    }</span>
+
+    public abstract int calculatePenalty(int dayPenalty);
+
+    protected String title;
+    protected int copies;
+    protected int day;
+}
+
+class Book extends Document {
+    public Book(String bookTitle, int bookCopies) {
+<span class="nc" id="L44">        super(bookTitle, bookCopies);</span>
+<span class="nc" id="L45">        day = 10;</span>
+<span class="nc" id="L46">    }</span>
+
+    public int calculatePenalty(int dayPenalty) {
+<span class="nc" id="L49">        dayPenalty = dayPenalty * -1;</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (dayPenalty &lt;= 7)</span>
+<span class="nc" id="L51">            return 2000;</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (dayPenalty &lt;= 21)</span>
+<span class="nc" id="L53">            return 3000;</span>
+<span class="nc" id="L54">        return 2000;</span>
+    }
+
+}
+
+class Reference extends Document {
+    Reference(String referenceTitle, int referenceCopies) {
+<span class="nc" id="L61">        super(referenceTitle, referenceCopies);</span>
+<span class="nc" id="L62">        day = 5;</span>
+<span class="nc" id="L63">    }</span>
+
+    public int calculatePenalty(int dayPenalty) {
+<span class="nc" id="L66">        dayPenalty = dayPenalty * -1;</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (dayPenalty &lt;= 3)</span>
+<span class="nc" id="L68">            return 5000;</span>
+<span class="nc" id="L69">        return 7000;</span>
+    }
+
+}
+
+class Magazine extends Document {
+    public Magazine(String magTitle, int magYear, int magNumber, int magCopies) {
+<span class="nc" id="L76">        super(magTitle, magCopies);</span>
+<span class="nc" id="L77">        year = magYear;</span>
+<span class="nc" id="L78">        number = magNumber;</span>
+<span class="nc" id="L79">        day = 2;</span>
+<span class="nc" id="L80">    }</span>
+
+    public int calculatePenalty(int dayPenalty) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (year &lt; 1390)</span>
+<span class="nc" id="L84">            return 2000;</span>
+<span class="nc" id="L85">        return 3000;</span>
+    }
+
+    protected int year;
+    protected int number;
+}
+
+abstract class Person {
+<span class="nc" id="L93">    public Person(String personName) {</span>
+
+<span class="nc" id="L95">        name = personName;</span>
+<span class="nc" id="L96">        penalty = 0;</span>
+<span class="nc" id="L97">    }</span>
+
+    public void borrow(Document doc) {
+        int day;
+<span class="nc" id="L101">        docsBorrow.add(doc);</span>
+<span class="nc" id="L102">        day = doc.getDay();</span>
+<span class="nc" id="L103">        dayBorrow.add(day);</span>
+<span class="nc" id="L104">        canExtend.add(true);</span>
+<span class="nc" id="L105">    }</span>
+
+    public String getName() {
+<span class="nc" id="L108">        return name;</span>
+    }
+
+    public abstract boolean canBorrow();
+
+    public void extend(String bookName) throws LibraryException {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (int i = 0; i &lt; docsBorrow.size(); i++) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (docsBorrow.get(i).getTitle().equals(bookName)) {</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (canExtend.get(i)) {</span>
+<span class="nc" id="L117">                    dayBorrow.set(i, dayBorrow.get(i) + docsBorrow.get(i).getDay());</span>
+<span class="nc" id="L118">                    canExtend.set(i, false);</span>
+                } else {
+<span class="nc" id="L120">                    throw new LibraryException(&quot;cant extend&quot;);</span>
+                }
+            } else {
+<span class="nc" id="L123">                throw new LibraryException(&quot;cant extend&quot;);</span>
+            }
+        }
+<span class="nc" id="L126">    }</span>
+
+    public void returnDoc(String bookName) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        for (int i = 0; i &lt; docsBorrow.size(); i++) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (docsBorrow.get(i).getTitle().equals(bookName)) {</span>
+<span class="nc" id="L131">                docsBorrow.get(i).returnBook();</span>
+<span class="nc" id="L132">                docsBorrow.remove(i);</span>
+<span class="nc" id="L133">                dayBorrow.remove(i);</span>
+<span class="nc" id="L134">                canExtend.remove(i);</span>
+<span class="nc" id="L135">                break;</span>
+            }
+        }
+<span class="nc" id="L138">    }</span>
+
+    public int getPenalty() {
+<span class="nc" id="L141">        return penalty;</span>
+    }
+
+    public void timePass() {
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        for (int i = 0; i &lt; dayBorrow.size(); i++) {</span>
+<span class="nc" id="L146">            dayBorrow.set(i, dayBorrow.get(i) - 1);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (dayBorrow.get(i) &lt; 0) {</span>
+<span class="nc" id="L148">                penalty = penalty + docsBorrow.get(i).calculatePenalty(dayBorrow.get(i));</span>
+            }
+        }
+<span class="nc" id="L151">    }</span>
+
+    protected String name;
+    protected int penalty;
+<span class="nc" id="L155">    protected List&lt;Document&gt; docsBorrow = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L156">    protected List&lt;Integer&gt; dayBorrow = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L157">    protected List&lt;Boolean&gt; canExtend = new ArrayList&lt;&gt;();</span>
+}
+
+class Student extends Person {
+    public Student(String studentId, String studentName) {
+<span class="nc" id="L162">        super(studentName);</span>
+<span class="nc" id="L163">        id = studentId;</span>
+<span class="nc" id="L164">    }</span>
+
+    public boolean canBorrow() {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        return docsBorrow.size() &lt; 2;</span>
+    }
+
+    protected String id;
+}
+
+class Prof extends Person {
+
+    public Prof(String profName) {
+<span class="nc" id="L176">        super(profName);</span>
+<span class="nc" id="L177">    }</span>
+
+    public boolean canBorrow() {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        return docsBorrow.size() &lt; 5;</span>
+    }
+}
+
+<span class="nc" id="L184">public class Library implements ILibrary {</span>
+    public void addStudentMember(String studentId, String studentName) throws LibraryException {
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (studentId.equals(&quot;&quot;))</span>
+<span class="nc" id="L187">                throw new LibraryException(&quot;student id is empty&quot;);</span>
+
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            if (studentName.equals(&quot;&quot;))</span>
+<span class="nc" id="L190">                throw new LibraryException(&quot;student name is empty&quot;);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">            for (Person person : persons) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                if (person.getName().equals(studentName))</span>
+<span class="nc" id="L193">                    throw new LibraryException(&quot;the member has already added&quot;);</span>
+<span class="nc" id="L194">            }</span>
+<span class="nc" id="L195">            Student student = new Student(studentId, studentName);</span>
+<span class="nc" id="L196">            persons.add(student);</span>
+<span class="nc" id="L197">    }</span>
+
+    public void addProfMember(String profName) throws LibraryException {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">            if (profName.equals(&quot; &quot;))</span>
+<span class="nc" id="L201">                throw new LibraryException(&quot;prof name is empty&quot;);</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">            for (Person person : persons) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                if (person.getName().equals(profName))</span>
+<span class="nc" id="L204">                    throw new LibraryException(&quot;the member has already added&quot;);</span>
+<span class="nc" id="L205">            }</span>
+<span class="nc" id="L206">            Prof prof = new Prof(profName);</span>
+<span class="nc" id="L207">            persons.add(prof);</span>
+<span class="nc" id="L208">    }</span>
+
+    public void addBook(String bookTitle, int copies) throws LibraryException {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (bookTitle.equals(&quot; &quot;))</span>
+<span class="nc" id="L212">                throw new LibraryException(&quot;book name is empty&quot;);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            for (Document doc : docs) {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">                if (bookTitle.equals(doc.getTitle()))</span>
+<span class="nc" id="L215">                    throw new LibraryException(&quot;the book has already added&quot;);</span>
+<span class="nc" id="L216">            }</span>
+<span class="nc" id="L217">            Book book = new Book(bookTitle, copies);</span>
+<span class="nc" id="L218">            docs.add(book);</span>
+<span class="nc" id="L219">    }</span>
+
+    public void addMagazine(String magazineTitle, int year, int number, int copies) throws LibraryException {
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            if (magazineTitle.equals(&quot; &quot;))</span>
+<span class="nc" id="L223">                throw new LibraryException(&quot;magazine name is empty&quot;);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            for (Document doc : docs) {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">                if (magazineTitle.equals(doc.getTitle()))</span>
+<span class="nc" id="L226">                    throw new LibraryException(&quot;the magazine has already added&quot;);</span>
+<span class="nc" id="L227">            }</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            if (year &lt;= 0)</span>
+<span class="nc" id="L229">                throw new LibraryException(&quot;magazine`s year is incorrect&quot;);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            if (number &lt;= 0)</span>
+<span class="nc" id="L231">                throw new LibraryException(&quot;magazine`s number is incorrect&quot;);</span>
+<span class="nc" id="L232">            Magazine magazine = new Magazine(magazineTitle, year, number, copies);</span>
+<span class="nc" id="L233">            docs.add(magazine);</span>
+<span class="nc" id="L234">    }</span>
+
+    public void addReference(String referenceTitle, int copies) throws LibraryException {
+<span class="nc bnc" id="L237" title="All 2 branches missed.">            if (referenceTitle.equals(&quot; &quot;))</span>
+<span class="nc" id="L238">                throw new LibraryException(&quot;reference name is empty&quot;);</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            for (Document doc : docs) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                if (referenceTitle.equals(doc.getTitle()))</span>
+<span class="nc" id="L241">                    throw new LibraryException(&quot;the reference has already added&quot;);</span>
+<span class="nc" id="L242">            }</span>
+<span class="nc" id="L243">            Reference reference = new Reference(referenceTitle, copies);</span>
+<span class="nc" id="L244">            docs.add(reference);</span>
+<span class="nc" id="L245">    }</span>
+
+    public void borrow(String memberName, String documentTitle) throws LibraryException {
+<span class="nc" id="L248">        int iBook = 0;</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            for (int i = 0; i &lt; docs.size(); i++) {</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                if (docs.get(i).getTitle().equals(documentTitle)) {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                    if (docs.get(i).getCopies() &lt;= 0)</span>
+<span class="nc" id="L252">                        throw new LibraryException(&quot;this book doesnt exist&quot;);</span>
+<span class="nc" id="L253">                    iBook = i;</span>
+<span class="nc" id="L254">                    break;</span>
+                }
+            }
+<span class="nc bnc" id="L257" title="All 2 branches missed.">            for (Person person : persons) {</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                if (person.getName().equals(memberName)) {</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                    if (!person.canBorrow())</span>
+<span class="nc" id="L260">                        throw new LibraryException(&quot;the member cant borrow any more&quot;);</span>
+                    else {
+<span class="nc" id="L262">                        person.borrow(docs.get(iBook));</span>
+<span class="nc" id="L263">                        docs.get(iBook).barrowBook();</span>
+                    }
+                }
+<span class="nc" id="L266">            }</span>
+<span class="nc" id="L267">    }</span>
+
+    public void extend(String memberName, String documentTitle) throws LibraryException {
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            for (Person person : persons) {</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">                if (person.getName().equals(memberName)) {</span>
+<span class="nc" id="L272">                    person.extend(documentTitle);</span>
+                }
+<span class="nc" id="L274">            }</span>
+<span class="nc" id="L275">    }</span>
+
+    public void returnDocument(String memberName, String documentTitle) {
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        for (Person person : persons) {</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            if (person.getName().equals(memberName))</span>
+<span class="nc" id="L280">                person.returnDoc(documentTitle);</span>
+<span class="nc" id="L281">        }</span>
+<span class="nc" id="L282">    }</span>
+
+    public int getTotalPenalty(String memberName) {
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        for (Person person : persons) {</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            if (person.getName().equals(memberName))</span>
+<span class="nc" id="L287">                return person.getPenalty();</span>
+<span class="nc" id="L288">        }</span>
+<span class="nc" id="L289">        return 0;</span>
+    }
+
+    public List&lt;String&gt; availableTitles() {
+<span class="nc" id="L293">        List&lt;String&gt; available_title = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">        for (Document doc : docs) {</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">            if (doc.getCopies() &gt; 0)</span>
+<span class="nc" id="L296">                available_title.add(doc.getTitle());</span>
+<span class="nc" id="L297">        }</span>
+<span class="nc" id="L298">        return available_title;</span>
+    }
+
+    public void timePass(int days) throws LibraryException {
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            if (days &lt; 0)</span>
+<span class="nc" id="L303">                throw new LibraryException(&quot;days cant be negative&quot;);</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            for (int i = 0; i &lt; days; i++) {</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                for (Person person : persons) {</span>
+<span class="nc" id="L306">                    person.timePass();</span>
+<span class="nc" id="L307">                }</span>
+            }
+<span class="nc" id="L309">    }</span>
+
+<span class="nc" id="L311">    private final List&lt;Person&gt; persons = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L312">    private final List&lt;Document&gt; docs = new ArrayList&lt;&gt;();</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
